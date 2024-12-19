@@ -1,10 +1,10 @@
 # Final Project: Video Hosting Backend
 
-This project is the culmination of our course, showcasing a comprehensive backend for a YouTube-like video hosting platform. Built with **Node.js**, **Express.js**, **MongoDB**, and **Mongoose**, it incorporates essential backend functionalities, including:
+This project is the final assignment for our course, where we built a backend for a video hosting platform like YouTube. It is created using **Node.js**, **Express.js**, **MongoDB**, and **Mongoose**. Key features include:
 
-- **User Authentication**: Login and signup using **JWT** and **bcrypt**.  
-- **Video Management**: Upload, like, dislike, comment, and reply.  
-- **Subscription System**: Subscribe and unsubscribe to channels.  
-- **Secure Access**: Utilizes access and refresh tokens for enhanced security.  
+- **User Authentication**: Login and signup with **JWT** and **bcrypt**.  
+- **Video Features**: Upload, like, dislike, comment, and reply.  
+- **Subscriptions**: Subscribe and unsubscribe to channels.  
+- **Secure Access**: Uses access and refresh tokens.  
 
-We followed industry-standard practices, ensuring a robust and scalable backend. Completing this project provided hands-on experience with modern backend technologies and best practices, making it a valuable learning milestone.
+This project follows good coding practices and provides a complete backend experience. It was a great way to learn and apply backend development skills.
