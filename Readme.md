@@ -32,4 +32,4 @@ This is the final project for the **Backend Development Course** taught by Hites
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/video-hosting-backend.git
+   git clone https://github.com/pankajuday/InTubeVideoStream.git
