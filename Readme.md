@@ -30,6 +30,9 @@ This is the final project for the **Backend Development Course** taught by **Hit
 - 🛢️ **MongoDB and Mongoose**  
 - 🔑 **JWT (JSON Web Tokens)**  
 - 🔒 **bcrypt (Password Hashing)**  
+- ⛈️ **Cloudinary**
+- 🌦️ **Deployed on Azure** 
+  
 
 ### 💡 This project showcases backend concepts and demonstrates secure, scalable, and efficient practices for building web applications.
 
