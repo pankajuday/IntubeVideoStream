@@ -11,7 +11,7 @@ This is the final project for the **Backend Development Course** taught by **Hit
 
 ### **Video Management** 🎥  
 - Upload videos with metadata like title, description, duration, etc.  
-- Like 👍, Dislike 👎, and Comment 💬 on videos.  
+- Like 👍, Dislike 👎, and Comment 💬 on videos, Tweet 🕊️. 
 - Reply to comments.  
 
 ### **User Interactions** 🔔  
