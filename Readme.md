@@ -1,4 +1,4 @@
-# 🚀 **Final Project: Backend Development Course**  
+# 🚀 **Project Update : Backend Development **  
 
 This is the final project for the **Backend Development Course** taught by **Hitesh Choudhary** on the 🎥 *Chai Aur Code* YouTube channel. The project is a complete backend for a video hosting platform similar to YouTube, built with **Node.js**, **Express.js**, **MongoDB**, **Mongoose**, **JWT**, and **bcrypt**.
 
