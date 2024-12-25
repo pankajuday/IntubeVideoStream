@@ -105,7 +105,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     if (!publishedVideo) {
         throw new ApiError(
             500,
-            "Something went wrong while registring the user"
+            "Something went wrong while uploading video the user"
         );
     }
 
