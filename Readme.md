@@ -33,7 +33,7 @@ The project is a complete backend for a video hosting platform similar to YouTub
 - ⛈️ **Cloudinary**
 - ⛑️ **Helmet.js**
 - 🌦️ **[Deployed on Azure 🔗](https://intubevideo.azurewebsites.net)** 
-- 🧪 **[Postman Test](https://shersah.postman.co/workspace/Shersah~2cbc675f-8888-4b7b-9d44-ee0537b7eebc/collection/37155500-c5bc3b19-82e2-49cf-9e85-f31095b85714?action=share&creator=37155500&active-environment=37155500-ff418ece-aada-4824-b9a8-8641020fec88)**
+- 🧪 **[Postman Test 🔗](https://shersah.postman.co/workspace/Shersah~2cbc675f-8888-4b7b-9d44-ee0537b7eebc/collection/37155500-c5bc3b19-82e2-49cf-9e85-f31095b85714?action=share&creator=37155500&active-environment=37155500-ff418ece-aada-4824-b9a8-8641020fec88)**
   
 ### 🧑‍🏫 This is the final project for the **Backend Development Course** taught by **[Hitesh Choudhary](https://github.com/hiteshchoudhary)** on the 🎥 *Chai Aur Code* YouTube channel.
 
