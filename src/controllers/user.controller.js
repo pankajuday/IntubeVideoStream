@@ -138,7 +138,6 @@ const loginUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-        domain:"https://intube.pankajuday.tech",
         sameSite:"Lex"
         
     };
