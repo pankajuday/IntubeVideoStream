@@ -4,6 +4,7 @@ import {
     getCurrentUser,
     getUserChannelProfile,
     getWatchHistory,
+    isLogin,
     loginUser,
     logoutUser,
     refreshAccessToken,
@@ -33,9 +34,10 @@ router.route("/register").post(
 );
 
 router.route("/login").post(loginUser);
+router.route("/islogin").get(isLogin);
 
 //secure routes
-router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/logout").get(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);

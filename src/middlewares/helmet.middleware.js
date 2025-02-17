@@ -1,6 +1,6 @@
 import helmet from "helmet";
 
-export const httpHelmet = helmet({
+ const httpHelmet = helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
     contentSecurityPolicy: {
         directives: {
@@ -12,3 +12,5 @@ export const httpHelmet = helmet({
         },
     },
 });
+
+export default httpHelmet;

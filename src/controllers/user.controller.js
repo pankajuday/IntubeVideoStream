@@ -38,6 +38,8 @@ const registerUser = asyncHandler(async (req, res) => {
     // remove password and refresh token field from response
     // check for user creation
     // return response\
+    // console.log(req);
+    
 
     const { fullName, email, username, password } = req.body;
 
@@ -136,6 +138,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
+        
     };
 
     return res
@@ -152,6 +155,19 @@ const loginUser = asyncHandler(async (req, res) => {
             )
         );
 });
+
+const isLogin = asyncHandler(async(req, res)=>{
+    const incomingRefreshToken = req.cookies.refreshToken;
+    if (incomingRefreshToken) {
+        return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "ok"));
+    }else{
+        return res
+        .status(401)
+        .json(new ApiResponse(401, {}, "bad"));
+    }
+})
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
@@ -474,4 +490,5 @@ export {
     updateUsercoverImage,
     getUserChannelProfile,
     getWatchHistory,
+    isLogin
 };

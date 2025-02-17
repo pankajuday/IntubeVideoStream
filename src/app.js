@@ -1,18 +1,21 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import httpHelmet from "helmet";
+import httpHelmet from "./middlewares/helmet.middleware.js"
 
 const app = express();
 
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN,
+        origin: process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()),
         credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        exposedHeaders: ['Content-Type', 'Authorization']
     })
 );
 
-app.use(httpHelmet())
+app.use(httpHelmet)
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));

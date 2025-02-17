@@ -11,11 +11,19 @@ import {
 } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+    const {
+        page = 1,
+        limit = 9,
+        query,
+        sortBy,
+        sortType,
+        userId,
+    } = req.query;
     //DONE: get all videos based on query, sort, pagination
 
     const options = {
         page: parseInt(page, 10),
+        select: "title description user owner",
         limit: parseInt(limit, 10),
         sort: { [sortBy]: sortType === "asc" ? 1 : -1 },
     };
@@ -26,16 +34,38 @@ const getAllVideos = asyncHandler(async (req, res) => {
                 $or: [
                     {
                         ...(query && {
-                            title: { $regex: query, $options: "i" },
+                            title: { $regex: query, $options: 'i' },
                         }),
                         ...(userId && {
                             owner: new mongoose.Types.ObjectId(userId),
                         }),
                         ...(query && {
-                            description: { $regex: query, $options: "i" },
+                            description: { $regex: query, $options: 'i' },
                         }),
                     },
                 ],
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullName: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $arrayElemAt: ["$owner.fullName", 0],
+                },
             },
         },
     ]);
@@ -45,20 +75,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(
             200,
-            // {
-            //     // VideoData: result.docs,
-            //     // pageInfo: {
-            //     //     totalDocs: result.totalDocs,
-            //     //     limit: result.limit,
-            //     //     totalPages: result.totalPages,
-            //     //     page: result.page,
-            //     //     pagingCounter: result.pagingCounter,
-            //     //     hasPrevPage: result.hasPrevPage,
-            //     //     hasNextPage: result.hasNextPage,
-            //     //     prevPage: result.prevPage,
-            //     //     nextPage: result.nextPage,
-            //     // },
-            // },
             response,
             "All video fetched successfully based on page "
         )
