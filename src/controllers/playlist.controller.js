@@ -98,7 +98,12 @@ const getPlaylistById = asyncHandler(async (req, res) => {
                         {
                             $addFields: {
                                 owner: {
-                                    $first: "$owner",
+                                    $arrayElemAt: ["$owner.fullName", 0],
+                                    
+                                },
+                                avatar: {
+                                    $arrayElemAt: ["$owner.avatar", 0],
+                                    
                                 },
                             },
                         },
