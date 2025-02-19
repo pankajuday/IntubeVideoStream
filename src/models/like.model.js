@@ -11,14 +11,17 @@ const likeSchema = new Schema(
         comment: {
             type: Schema.Types.ObjectId,
             ref: "Comment",
+            unique:true
         },
         tweet: {
             type: Schema.Types.ObjectId,
             ref: "Tweet",
+            unique:true
         },
         likedBy: {
             type: Schema.Types.ObjectId,
             ref: "User",
+            
         },
     },
     { timestamps: true }

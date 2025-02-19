@@ -56,6 +56,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                     {
                         $project: {
                             fullName: 1,
+                            avatar:1
                         },
                     },
                 ],
@@ -65,6 +66,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
             $addFields: {
                 owner: {
                     $arrayElemAt: ["$owner.fullName", 0],
+                    
+                },
+                avatar: {
+                    $arrayElemAt: ["$owner.avatar", 0],
+                    
                 },
             },
         },

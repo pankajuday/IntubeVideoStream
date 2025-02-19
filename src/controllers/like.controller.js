@@ -150,12 +150,21 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                             },
                         },
                         {
-                            $addFields: {
-                                owner: {
-                                    $first: "$owner",
-                                },
-                            },
-                        },
+            $addFields: {
+                owner: {
+                    $arrayElemAt: ["$owner.fullName", 0],
+                    
+                },
+                avatar: {
+                    $arrayElemAt: ["$owner.avatar", 0],
+                    
+                },
+                username: {
+                    $arrayElemAt: ["$owner.username", 0],
+                    
+                },
+            },
+        },
                     ],
                 },
             },
