@@ -39,7 +39,6 @@ const registerUser = asyncHandler(async (req, res) => {
     // check for user creation
     // return response\
     // console.log(req);
-    
 
     const { fullName, email, username, password } = req.body;
 
@@ -123,7 +122,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "username is required");
     }
 
-    const user = await User.findOne({username});
+    const user = await User.findOne({ username });
     if (!user) throw new ApiError(404, "User does not exist");
 
     const isPasswordValid = await user.isPasswordCorrect(password);
@@ -138,8 +137,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-        sameSite:"None"
-        
+        sameSite: "None",
     };
 
     return res
@@ -157,18 +155,14 @@ const loginUser = asyncHandler(async (req, res) => {
         );
 });
 
-const isLogin = asyncHandler(async(req, res)=>{
+const isLogin = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken;
     if (incomingRefreshToken) {
-        return res
-        .status(200)
-        .json(new ApiResponse(200, {}, "ok"));
-    }else{
-        return res
-        .status(401)
-        .json(new ApiResponse(401, {}, "bad"));
+        return res.status(200).json(new ApiResponse(200, {}, "ok"));
+    } else {
+        return res.status(401).json(new ApiResponse(401, {}, "bad"));
     }
-})
+});
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
@@ -186,6 +180,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
+        sameSite: "None",
     };
 
     return res
@@ -461,11 +456,9 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                         $addFields: {
                             owner: {
                                 $arrayElemAt: ["$owner.fullName", 0],
-                                
                             },
                             avatar: {
                                 $arrayElemAt: ["$owner.avatar", 0],
-                                
                             },
                         },
                     },
@@ -497,5 +490,5 @@ export {
     updateUsercoverImage,
     getUserChannelProfile,
     getWatchHistory,
-    isLogin
+    isLogin,
 };
