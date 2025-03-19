@@ -150,15 +150,33 @@ const getChannelVideos = asyncHandler(async (req, res) => {
             $match: { owner: new mongoose.Types.ObjectId(req.user?._id) },
         },
         {
-            $project: {
-                videofile: 1,
-                title: 1,
-                _id: 0,
-                thumbnail: 1,
-                owner: 1,
-                isPublished: 1,
-                views: 1,
-                createdAt: 1,
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullName: 1,
+                            avatar: 1,
+                            username: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $arrayElemAt: ["$owner.fullName", 0],
+                },
+                username: {
+                    $arrayElemAt: ["$owner.username", 0],
+                },
+                avatar: {
+                    $arrayElemAt: ["$owner.avatar", 0],
+                },
             },
         },
     ]);

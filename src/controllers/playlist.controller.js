@@ -99,11 +99,9 @@ const getPlaylistById = asyncHandler(async (req, res) => {
                             $addFields: {
                                 owner: {
                                     $arrayElemAt: ["$owner.fullName", 0],
-                                    
                                 },
                                 avatar: {
                                     $arrayElemAt: ["$owner.avatar", 0],
-                                    
                                 },
                             },
                         },
@@ -216,22 +214,28 @@ const updatePlaylist = asyncHandler(async (req, res) => {
 
         const updatedPlaylist = await Playlist.findByIdAndUpdate(
             {
-                _id:playlistId,
-                owner:req.user?._id
+                _id: playlistId,
+                owner: req.user?._id,
             },
             {
                 $set: {
-                    name:name,
-                    description:description,
+                    name: name,
+                    description: description,
                 },
             },
             {
                 new: true,
             }
         );
-        if(!updatedPlaylist) throw new ApiError(404,"Playlist not updated due to some ERROR Try again");
+        if (!updatedPlaylist)
+            throw new ApiError(
+                404,
+                "Playlist not updated due to some ERROR Try again"
+            );
 
-        return res.status(200).json(new ApiResponse(200,updatedPlaylist,"Playlist updated"));
+        return res
+            .status(200)
+            .json(new ApiResponse(200, updatedPlaylist, "Playlist updated"));
     } catch (error) {
         throw error;
     }

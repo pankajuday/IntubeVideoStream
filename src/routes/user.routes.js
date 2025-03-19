@@ -16,6 +16,7 @@ import {
 
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import loginLimiter from "../middlewares/rateLimit.middleware.js";
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.route("/register").post(
     registerUser
 );
 
-router.route("/login").post(loginUser);
+router.route("/login",loginLimiter).post(loginUser);
 router.route("/islogin").get(isLogin);
 
 //secure routes
