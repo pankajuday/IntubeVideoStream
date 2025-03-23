@@ -72,6 +72,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
                 $project: {
                     _id: 0,
                     subscriber: {
+                        _id:1,
                         fullName: 1,
                         email: 1,
                         username: 1,
@@ -132,6 +133,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
                 $project: {
                     _id: 0,
                     channels: {
+                        _id:1,
                         fullName: 1,
                         email: 1,
                         username: 1,
@@ -146,7 +148,15 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
             },
         ]);
         if (!subscribedChannels.length)
-            throw new ApiError(404, "No channels found");
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    [],
+                    "Channel not found"
+                )
+            );
 
         return res
             .status(200)
