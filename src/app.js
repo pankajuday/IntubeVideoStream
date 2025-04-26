@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import httpHelmet from "./middlewares/helmet.middleware.js"
+import httpHelmet from "./utils/helmet.js";
 
 const app = express();
 

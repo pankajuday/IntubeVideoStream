@@ -28,23 +28,74 @@ const getAllVideos = asyncHandler(async (req, res) => {
         sort: { [sortBy]: sortType === "asc" ? 1 : -1 },
     };
 
+    // const matchAggregation = Video.aggregate([
+    //     {
+    //         $match: {
+    //             isPublished: true,
+    //             $or: [
+    //                 ...(query ? [
+    //                     { title: { $regex: query, $options: 'i' } },
+    //                     { description: { $regex: query, $options: 'i' } }
+    //                 ] : []),
+    //                 ...(userId ? [{ owner: new mongoose.Types.ObjectId(userId) }] : [])
+    //             ]
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: "users",
+    //             localField: "owner",
+    //             foreignField: "_id",
+    //             as: "owner",
+    //             pipeline: [
+    //                 {
+    //                     $project: {
+    //                         fullName: 1,
+    //                         avatar:1
+    //                     },
+    //                 },
+    //             ],
+    //         },
+    //     },
+    //     {
+    //         $addFields: {
+    //             owner: {
+    //                 $arrayElemAt: ["$owner.fullName", 0],
+                    
+    //             },
+    //             avatar: {
+    //                 $arrayElemAt: ["$owner.avatar", 0],
+                    
+    //             },
+    //         },
+    //     },
+    // ]);
+
+
+    // Build the match conditions properly
+    let matchConditions = { isPublished: true };
+    
+    // Add search conditions only if query or userId exists
+    if (query || userId) {
+        matchConditions.$or = [];
+        
+        if (query) {
+            matchConditions.$or.push(
+                { title: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } }
+            );
+        }
+        
+        if (userId) {
+            matchConditions.$or.push(
+                { owner: new mongoose.Types.ObjectId(userId) }
+            );
+        }
+    }
+
     const matchAggregation = Video.aggregate([
         {
-            $match: {
-                $or: [
-                    {
-                        ...(query && {
-                            title: { $regex: query, $options: 'i' },
-                        }),
-                        ...(userId && {
-                            owner: new mongoose.Types.ObjectId(userId),
-                        }),
-                        ...(query && {
-                            description: { $regex: query, $options: 'i' },
-                        }),
-                    },
-                ],
-            },
+            $match: matchConditions
         },
         {
             $lookup: {
@@ -56,7 +107,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                     {
                         $project: {
                             fullName: 1,
-                            avatar:1
+                            avatar: 1
                         },
                     },
                 ],
@@ -66,16 +117,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
             $addFields: {
                 owner: {
                     $arrayElemAt: ["$owner.fullName", 0],
-                    
                 },
                 avatar: {
                     $arrayElemAt: ["$owner.avatar", 0],
-                    
                 },
             },
         },
     ]);
-
     const response = await Video.aggregatePaginate(matchAggregation, options);
 
     return res.status(200).json(

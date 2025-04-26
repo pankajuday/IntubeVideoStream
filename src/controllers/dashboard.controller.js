@@ -5,6 +5,7 @@ import { Like } from "../models/like.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { User } from "../models/user.model.js";
 
 const getChannelStats = asyncHandler(async (req, res) => {
     // DONE: Get the channel stats like
@@ -145,9 +146,15 @@ const getChannelStats = asyncHandler(async (req, res) => {
 
 const getChannelVideos = asyncHandler(async (req, res) => {
     // DONE: Get all the videos uploaded by the channel
+    const {username} = req.params;
+
+    if(!username) throw ApiError(400,"username required");
+    const user = await User.findOne({username:username}).select("-password -refreshToken");
     const channelVideos = await Video.aggregate([
         {
-            $match: { owner: new mongoose.Types.ObjectId(req.user?._id) },
+            $match: {
+                owner: new mongoose.Types.ObjectId(user?._id)
+            },
         },
         {
             $lookup: {
