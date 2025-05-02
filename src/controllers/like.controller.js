@@ -15,7 +15,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             throw new ApiError(404, "video id is not valid");
 
         if (!user) throw new ApiError(401, "User Unauthorized");
-        
+
         // let liked;
 
         const isLiked = await Like.findOne({
@@ -124,7 +124,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     try {
         const likedVideos = await Like.aggregate([
             {
-                $match: { likedBy: new mongoose.Types.ObjectId(req.user._id) },
+                $match: { likedBy: new mongoose.Types.ObjectId(req.user?._id) },
             },
             {
                 $lookup: {
@@ -144,28 +144,25 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                                         $project: {
                                             username: 1,
                                             fullName: 1,
-                                            avatar:1
+                                            avatar: 1,
                                         },
                                     },
                                 ],
                             },
                         },
                         {
-            $addFields: {
-                owner: {
-                    $arrayElemAt: ["$owner.fullName", 0],
-                    
-                },
-                avatar: {
-                    $arrayElemAt: ["$owner.avatar", 0],
-                    
-                },
-                username: {
-                    $arrayElemAt: ["$owner.username", 0],
-                    
-                },
-            },
-        },
+                            $addFields: {
+                                owner: {
+                                    $arrayElemAt: ["$owner.fullName", 0],
+                                },
+                                avatar: {
+                                    $arrayElemAt: ["$owner.avatar", 0],
+                                },
+                                username: {
+                                    $arrayElemAt: ["$owner.username", 0],
+                                },
+                            },
+                        },
                     ],
                 },
             },
@@ -177,7 +174,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                     newRoot: "$likedVideos",
                 },
             },
-            
         ]);
 
         return res
@@ -194,4 +190,37 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     }
 });
 
-export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
+const getLikedComment = asyncHandler(async (req, res) => {
+    const {commentId} = req.params;
+    try {
+        if (!commentId) {
+            throw new ApiError(400, "Comment ID is required");
+        }
+
+        if (!isValidObjectId(commentId)) {
+            throw new ApiError(400, "Invalid comment ID format");
+        }
+
+        // const likedComment = await Like.aggregate([
+        //     {
+        //         $match:{
+        //             comment: new mongoose.Types.ObjectId(commentId),
+        //             likedBy: new mongoose.Types.ObjectId(req.user?._id)
+        //         }
+        //     },
+        // ]);
+
+        const likedComment = await Like.findOne({
+            comment:commentId,
+            likedBy:req.user?._id
+        })
+        
+        return res
+        .status(200)
+        .json(new ApiResponse(200,likedComment,"Successfully fetched like comments"))
+    } catch (error) {
+        throw error
+    }
+});
+
+export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos,getLikedComment };

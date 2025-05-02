@@ -14,6 +14,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         const options = {
             page: parseInt(page, 10),
             limit: parseInt(limit, 10),
+            sort: { createdAt: -1 }
         };
 
         const matchAggregation = Comment.aggregate([
@@ -22,6 +23,30 @@ const getVideoComments = asyncHandler(async (req, res) => {
                     video: new mongoose.Types.ObjectId(videoId),
                 },
             },
+            {
+                $lookup:{
+                    from:"users",
+                    localField:"owner",
+                    foreignField:"_id",
+                    as:"owner",
+                    pipeline: [
+                        {
+                            $project: {
+                                fullName: 1,
+                                avatar: 1,
+                                username: 1,
+                            },
+                        },
+                    ],
+                }
+            },
+            {
+                $addFields:{
+                    owner:{
+                        $arrayElemAt:["$owner",0]
+                    }
+                }
+            }
         ]);
 
         const response = await Comment.aggregatePaginate(

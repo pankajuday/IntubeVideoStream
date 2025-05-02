@@ -148,12 +148,12 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     // DONE: Get all the videos uploaded by the channel
     const {username} = req.params;
 
-    if(!username) throw ApiError(400,"username required");
+    
     const user = await User.findOne({username:username}).select("-password -refreshToken");
     const channelVideos = await Video.aggregate([
         {
             $match: {
-                owner: new mongoose.Types.ObjectId(user?._id)
+                owner: new mongoose.Types.ObjectId(user?._id || req.user?._id)
             },
         },
         {
