@@ -11,14 +11,7 @@ import {
 } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const {
-        page = 1,
-        limit = 9,
-        query,
-        sortBy,
-        sortType,
-        userId,
-    } = req.query;
+    const { page = 1, limit = 9, query, sortBy, sortType, userId } = req.query;
     //DONE: get all videos based on query, sort, pagination
 
     const options = {
@@ -61,41 +54,40 @@ const getAllVideos = asyncHandler(async (req, res) => {
     //         $addFields: {
     //             owner: {
     //                 $arrayElemAt: ["$owner.fullName", 0],
-                    
+
     //             },
     //             avatar: {
     //                 $arrayElemAt: ["$owner.avatar", 0],
-                    
+
     //             },
     //         },
     //     },
     // ]);
 
-
     // Build the match conditions properly
     let matchConditions = { isPublished: true };
-    
+
     // Add search conditions only if query or userId exists
     if (query || userId) {
         matchConditions.$or = [];
-        
+
         if (query) {
             matchConditions.$or.push(
-                { title: { $regex: query, $options: 'i' } },
-                { description: { $regex: query, $options: 'i' } }
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
             );
         }
-        
+
         if (userId) {
-            matchConditions.$or.push(
-                { owner: new mongoose.Types.ObjectId(userId) }
-            );
+            matchConditions.$or.push({
+                owner: new mongoose.Types.ObjectId(userId),
+            });
         }
     }
 
     const matchAggregation = Video.aggregate([
         {
-            $match: matchConditions
+            $match: matchConditions,
         },
         {
             $lookup: {
@@ -107,7 +99,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                     {
                         $project: {
                             fullName: 1,
-                            avatar: 1
+                            avatar: 1,
                         },
                     },
                 ],
@@ -126,13 +118,15 @@ const getAllVideos = asyncHandler(async (req, res) => {
     ]);
     const response = await Video.aggregatePaginate(matchAggregation, options);
 
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            response,
-            "All video fetched successfully based on page "
-        )
-    );
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                response,
+                "All video fetched successfully based on page "
+            )
+        );
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
@@ -211,6 +205,13 @@ const getVideoById = asyncHandler(async (req, res) => {
         );
     }
 
+    const isVideoInPlaylist = await mongoose.model("Playlist").exists({
+        owner: req.user?._id,
+        videos:{
+            $in:[new mongoose.Types.ObjectId(videoId)]
+        }
+    })
+
     const getVideos = await Video.aggregate([
         {
             $match: {
@@ -240,11 +241,12 @@ const getVideoById = asyncHandler(async (req, res) => {
                 owner: {
                     $arrayElemAt: ["$owner", 0],
                 },
+                isAddedInPlaylist: !!isVideoInPlaylist
             },
         },
     ]);
 
-    if (getVideos === null) throw new ApiError(404, "video not found");
+    if (getVideos === null || getVideos.length === 0 ) throw new ApiError(404, "video not found");
 
     return res
         .status(200)

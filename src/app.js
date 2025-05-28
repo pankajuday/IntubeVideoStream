@@ -9,7 +9,7 @@ app.use(
     cors({
         origin: process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()),
         credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE',"PATCH"],
         allowedHeaders: ['Content-Type', 'Authorization'],
         exposedHeaders: ['Content-Type', 'Authorization']
     })

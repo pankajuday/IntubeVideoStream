@@ -33,15 +33,57 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
     const { userId } = req.params;
-    //DONE: get user playlists
     try {
         if (!userId) throw new ApiError(400, "User id is required");
         if (!isValidObjectId(userId))
             throw new ApiError(404, "user id is not valid");
 
-        const getUserPlaylists = await Playlist.find({
-            owner: userId,
-        }).populate("owner", "fullName username avatar");
+        const getUserPlaylists = await Playlist.aggregate([
+            {
+                $match: {
+                    owner: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "videos",
+                    localField: "videos",
+                    foreignField: "_id",
+                    as: "videos",
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "owner",
+                    pipeline: [
+                        {
+                            $project: {
+                                fullName: 1,
+                                username: 1,
+                                avatar: 1
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $addFields: {
+                    owner: {
+                        $arrayElemAt: ["$owner", 0]
+                    },
+                    thumbnail: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$videos.thumbnail", 0] },
+                            null
+                        ]
+                    },
+                    totalVideos: { $size: "$videos" }
+                }
+            }
+        ]);
 
         return res
             .status(200)
@@ -108,7 +150,19 @@ const getPlaylistById = asyncHandler(async (req, res) => {
                     ],
                 },
             },
+            {
+                $addFields: {
+                    thumbnail: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$videos.thumbnail", 0] },
+                            null
+                        ]
+                    }
+                }
+            }
         ]);
+
+
 
         return res
             .status(200)
@@ -145,7 +199,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
                     new ApiResponse(
                         200,
                         playlist,
-                        "Successfully added on playlist"
+                        "Successfully added to playlist"
                     )
                 );
         }
