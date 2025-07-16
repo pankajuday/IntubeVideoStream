@@ -8,11 +8,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
 const getChannelStats = asyncHandler(async (req, res) => {
-    // DONE: Get the channel stats like
-    // total videos
-    // total video views
-    // total subscribers
-    // total likes etc.
+     
     try {
         const user = req.user?._id;
 
@@ -145,8 +141,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
-    // DONE: Get all the videos uploaded by the channel
-    const {username} = req.params;
+     const {username} = req.params;
 
     
     const user = await User.findOne({username:username}).select("-password -refreshToken");

@@ -11,8 +11,8 @@ import {
 } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 9, query, sortBy, sortType, userId } = req.query;
-    //DONE: get all videos based on query, sort, pagination
+    const { page = 1, limit = 9, query, sortBy = "createdAt", sortType = "desc", userId } = req.query;
+    
 
     const options = {
         page: parseInt(page, 10),
@@ -144,7 +144,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     //
 
     const { title, description } = req.body;
-    // DONE: get video, upload to cloudinary, create video
+   
 
     if ([title, description].some((field) => field?.trim() === "")) {
         throw new ApiError(401, "Title and Description required");
@@ -186,7 +186,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    //DONE: get video by id
+    
 
     if (!videoId?.trim) throw new ApiError(400, "video Id required");
     if (!isValidObjectId(videoId)) throw new ApiError(404, "video not found ");
@@ -263,7 +263,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    //DONE: update video details like title, description, thumbnail
+    
 
     if (!videoId) throw new ApiError(400, "video Id required");
 
@@ -316,7 +316,7 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    //DONE: delete video
+    
 
     if (!videoId) throw new ApiError(404, "video Id required");
 
@@ -343,7 +343,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
-    // DONE: TOGGLE
+    
     const { videoId } = req.params;
 
     if (!videoId) throw new ApiError(404, "video Id required");

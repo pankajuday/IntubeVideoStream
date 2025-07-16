@@ -51,7 +51,7 @@ const updateOnCloudinary = async (localFilePath, publicUrl) => {
 };
 
 const deleteFromCloudinary = async function (publicUrl, options) {
-    // DONE: FOR DELETE FILE FROM CLOUDINARY
+    
     try {
         const x = publicUrl;
         const splitUrl = x.split("/");

@@ -7,7 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const toggleVideoLike = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
     const user = req.user?._id;
-    //DONE: toggle like on video
+    
     try {
         if (!videoId?.trim) throw new ApiError(400, "video Id required");
 
@@ -43,7 +43,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 });
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
-    //DONE: toggle like on comment
+    
 
     const { commentId } = req.params;
     const user = req.user?._id;
@@ -81,8 +81,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 });
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
-    //DONE: toggle like on tweet
-
+ 
     const { tweetId } = req.params;
     const user = req.user?._id;
     let liked;
@@ -120,8 +119,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-    //DONE: get all liked videos
-    try {
+     try {
         const likedVideos = await Like.aggregate([
             {
                 $match: { likedBy: new mongoose.Types.ObjectId(req.user?._id) },

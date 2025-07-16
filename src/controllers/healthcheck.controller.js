@@ -4,8 +4,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 
 const healthcheck = asyncHandler(async (req, res) => {
-    //DONE: build a healthcheck response that simply returns the OK status as json with a message
-    try {
+     try {
         return res
         .status(200)
         .json(

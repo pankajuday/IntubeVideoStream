@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createTweet = asyncHandler(async (req, res) => {
-    //DONE: create tweet
+  
     const { content } = req.body;
 
     try {
@@ -32,7 +32,7 @@ const createTweet = asyncHandler(async (req, res) => {
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
-    // DONE: get user tweets
+    
     const { userId } = req.params;
     // const userId = req.user?._id;
     try {
@@ -54,7 +54,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
 });
 
 const updateTweet = asyncHandler(async (req, res) => {
-    //DONE: update tweet
+    
     const { tweetId } = req.params;
     const { content } = req.body;
 
@@ -85,7 +85,7 @@ const updateTweet = asyncHandler(async (req, res) => {
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {
-    //DONE: delete tweet
+    
     const { tweetId } = req.params;
     try {
         if (!isValidObjectId) new ApiError(404, "Tweet id is unvalid");
