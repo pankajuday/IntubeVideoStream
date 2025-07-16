@@ -11,8 +11,14 @@ import {
 } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 9, query, sortBy = "createdAt", sortType = "desc", userId } = req.query;
-    
+    const {
+        page = 1,
+        limit = 9,
+        query,
+        sortBy = "createdAt",
+        sortType = "desc",
+        userId,
+    } = req.query;
 
     const options = {
         page: parseInt(page, 10),
@@ -100,7 +106,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                         $project: {
                             fullName: 1,
                             avatar: 1,
-                            username:1,
+                            username: 1,
                         },
                     },
                 ],
@@ -114,9 +120,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
                 avatar: {
                     $arrayElemAt: ["$owner.avatar", 0],
                 },
-                username:{
-                    $arrayElemAt:["$owner.username",0]
-                }
+                username: {
+                    $arrayElemAt: ["$owner.username", 0],
+                },
             },
         },
     ]);
@@ -144,7 +150,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     //
 
     const { title, description } = req.body;
-   
 
     if ([title, description].some((field) => field?.trim() === "")) {
         throw new ApiError(401, "Title and Description required");
@@ -186,7 +191,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    
 
     if (!videoId?.trim) throw new ApiError(400, "video Id required");
     if (!isValidObjectId(videoId)) throw new ApiError(404, "video not found ");
@@ -211,12 +215,10 @@ const getVideoById = asyncHandler(async (req, res) => {
 
     const isVideoInPlaylist = await mongoose.model("Playlist").exists({
         owner: req.user?._id,
-        videos:{
-            $in:[new mongoose.Types.ObjectId(videoId)]
-        }
-    })
-
-    
+        videos: {
+            $in: [new mongoose.Types.ObjectId(videoId)],
+        },
+    });
 
     const getVideos = await Video.aggregate([
         {
@@ -247,12 +249,13 @@ const getVideoById = asyncHandler(async (req, res) => {
                 owner: {
                     $arrayElemAt: ["$owner", 0],
                 },
-                isAddedInPlaylist: !!isVideoInPlaylist
+                isAddedInPlaylist: !!isVideoInPlaylist,
             },
         },
     ]);
 
-    if (getVideos === null || getVideos.length === 0 ) throw new ApiError(404, "video not found");
+    if (getVideos === null || getVideos.length === 0)
+        throw new ApiError(404, "video not found");
 
     return res
         .status(200)
@@ -263,7 +266,6 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    
 
     if (!videoId) throw new ApiError(400, "video Id required");
 
@@ -316,7 +318,6 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    
 
     if (!videoId) throw new ApiError(404, "video Id required");
 
@@ -343,7 +344,6 @@ const deleteVideo = asyncHandler(async (req, res) => {
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
-    
     const { videoId } = req.params;
 
     if (!videoId) throw new ApiError(404, "video Id required");
