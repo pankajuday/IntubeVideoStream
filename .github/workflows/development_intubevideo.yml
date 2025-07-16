@@ -80,9 +80,13 @@ jobs:
           package: .
           clean: true
           
+      - name: Get Resource Group
+        run: |
+          echo "RESOURCE_GROUP=$(az webapp list --query "[?name=='intubevideo'].resourceGroup" --output tsv)" >> $GITHUB_ENV
+
       - name: Configure Azure App Settings
         run: |
-          az webapp config appsettings set --name intubevideo --resource-group $(az webapp show --name intubevideo --query resourceGroup --output tsv) --settings NODE_ENV=production PORT=8080
+          az webapp config appsettings set --name intubevideo --resource-group ${{ env.RESOURCE_GROUP }} --settings NODE_ENV=production PORT=8080
           
       - name: Logout from Azure
         run: |
